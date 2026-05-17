@@ -1,0 +1,9 @@
+# .dockerignore - Files to exclude from Docker context
+node_modules/
+npm-debug.log
+yarn-error.log
+.git
+.gitignore
+README.md
+.env
+.DS_Store
