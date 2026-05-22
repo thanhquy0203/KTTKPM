@@ -1,0 +1,13 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: bai15_redis_limited
+    ports:
+      - "6380:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+    mem_limit: 128m
+    cpus: 0.5

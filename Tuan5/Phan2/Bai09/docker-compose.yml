@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    container_name: bai09_flask_app
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development

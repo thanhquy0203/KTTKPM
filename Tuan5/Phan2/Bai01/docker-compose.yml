@@ -1,0 +1,6 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: bai01_nginx
+    ports:
+      - "8080:80"

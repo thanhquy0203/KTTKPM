@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: phan3_bai02_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: appdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "db.adminCommand('ping').ok",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - app_net
+
+  app:
+    build: .
+    container_name: phan3_bai02_node_app
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      MONGO_URL: mongodb://root:password@mongo:27017/appdb?authSource=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - app_net
+
+volumes:
+  mongo_data:
+
+networks:
+  app_net:
+    driver: bridge

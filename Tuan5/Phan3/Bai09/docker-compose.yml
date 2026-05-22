@@ -1,0 +1,47 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: phan3_bai09_mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloud
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - nextcloud_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: phan3_bai09_redis
+    networks:
+      - nextcloud_net
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: phan3_bai09_nextcloud
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloud
+      REDIS_HOST: redis
+    ports:
+      - "8082:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+    networks:
+      - nextcloud_net
+
+volumes:
+  mariadb_data:
+  nextcloud_data:
+
+networks:
+  nextcloud_net:
+    driver: bridge

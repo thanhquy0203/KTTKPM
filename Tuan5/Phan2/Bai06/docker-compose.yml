@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bai06_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    container_name: bai06_wordpress
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    ports:
+      - "8084:80"
+    volumes:
+      - wordpress_data:/var/www/html
+
+volumes:
+  mysql_data:
+  wordpress_data:

@@ -1,0 +1,40 @@
+services:
+  web:
+    build: .
+    container_name: phan3_bai08_django
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DJANGO_SECRET_KEY: dev-secret-key
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      - django_net
+
+  celery:
+    build: .
+    container_name: phan3_bai08_celery
+    command: celery -A config worker --loglevel=info
+    environment:
+      DJANGO_SECRET_KEY: dev-secret-key
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - redis
+    networks:
+      - django_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: phan3_bai08_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - django_net
+
+networks:
+  django_net:
+    driver: bridge

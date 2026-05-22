@@ -1,0 +1,6 @@
+services:
+  react-nginx:
+    build: .
+    container_name: bai13_react_nginx
+    ports:
+      - "8085:80"

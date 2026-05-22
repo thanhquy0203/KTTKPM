@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: phan3_bai01_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wordpress_net
+
+  wordpress:
+    image: wordpress:latest
+    container_name: phan3_bai01_wordpress
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    ports:
+      - "8080:80"
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - wordpress_net
+
+volumes:
+  mysql_data:
+  wordpress_data:
+
+networks:
+  wordpress_net:
+    driver: bridge
